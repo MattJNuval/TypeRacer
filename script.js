@@ -19,10 +19,7 @@ var running = 0;
 
 
 // Match the text entered with the provided text on the page:
-
-
-// Start the timer:
-resetButton.onclick = function() {
+function inputFunction() {
     if (!running) {
         startTime = new Date().getTime();
         tInterval = setInterval(getShowTime, 1);
@@ -30,13 +27,50 @@ resetButton.onclick = function() {
 
         paused = 0;
         running = 1;
-        timerDisplay.style.background = "#FF0000";
-        timerDisplay.style.cursor = "auto";
-        timerDisplay.style.color = "yellow";
-        startTimerButton.classList.add('lighter');
-        pauseTimerButton.classList.remove('lighter');
-        startTimerButton.style.cursor = "auto";
-        pauseTimerButton.style.cursor = "pointer";
+    }
+    console.log("TestArea: " + testArea.value);
+    console.log("OriginText: " + originText);
+    if (testArea.value != "") {
+        if (originText.match(testArea.value)) {
+            console.log("GOOD!");
+            testWrapper.style.borderColor = 'green';
+        } else {
+            testWrapper.style.borderColor = 'red';
+        }
+    } else {
+        testWrapper.style.borderColor = '';
+    }
+
+    testArea.addEventListener("input", event => {
+        const target = event.currentTarget;
+        const currentLength = target.value.length;
+
+        console.log("originText Length: " + originText.length);
+        console.log("textArea Length: " + currentLength);
+        if (originText.match(testArea.value) && currentLength == originText.length) {
+            clearInterval(tInterval);
+            savedTime = 0;
+            difference = 0;
+            paused = 0;
+            running = 0;
+            testArea.disabled = true;
+        }
+
+    });
+}
+
+// Start the timer:
+resetButton.onclick = function() {
+    clearInterval(tInterval);
+    savedTime = 0;
+    difference = 0;
+    paused = 0;
+    running = 0;
+    theTimer.innerHTML = '00' + ':' + '00' + ':' + '00';
+    testArea.value = "";
+    testWrapper.style.borderColor = '';
+    if (testArea.disabled == true) {
+        testArea.disabled = false;
     }
 }
 
